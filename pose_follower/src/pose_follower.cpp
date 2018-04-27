@@ -330,7 +330,7 @@ namespace pose_follower {
     if (std::isnan(res.linear.x))
         res.linear.x = 0.0;
     if (std::isnan(res.linear.y))
-        res.linear.x = 0.0;
+        res.linear.y = 0.0;
 
     //we want to check for whether or not we're desired to rotate in place
     if(sqrt(twist.linear.x * twist.linear.x + twist.linear.y * twist.linear.y) < in_place_trans_vel_){
