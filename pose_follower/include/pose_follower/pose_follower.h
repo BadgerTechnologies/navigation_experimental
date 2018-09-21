@@ -84,6 +84,7 @@ namespace pose_follower {
       bool turn_in_place_first_;
       double max_heading_diff_before_moving_;
       bool holonomic_;
+      bool skip_trajectory_validation_;
       boost::mutex odom_lock_;
       ros::Subscriber odom_sub_;
       nav_msgs::Odometry base_odom_;
