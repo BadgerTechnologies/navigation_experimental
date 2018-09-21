@@ -96,6 +96,10 @@ namespace pose_follower {
     //if turn_in_place_first is true, turn in place if our heading is more than this far from facing the goal location
     node_private.param("max_heading_diff_before_moving", max_heading_diff_before_moving_, 0.17);
 
+    //Sometimes, trajectory validation is to be handled by our caller rather than here.
+    //NOTE: This is unsafe in move_base, because it does not validate the twist from local planners!
+    node_private.param("skip_trajectory_validation", skip_trajectory_validation_, false);
+
     ros::NodeHandle node;
     odom_sub_ = node.subscribe<nav_msgs::Odometry>("odom", 1, boost::bind(&PoseFollower::odomCallback, this, _1));
     vel_pub_ = node.advertise<geometry_msgs::Twist>("cmd_vel", 10);
@@ -166,8 +170,11 @@ namespace pose_follower {
     geometry_msgs::Twist limit_vel = limitTwist(diff);
 
     geometry_msgs::Twist test_vel = limit_vel;
-    bool legal_traj = collision_planner_.checkTrajectory(test_vel.linear.x, test_vel.linear.y, test_vel.angular.z, true);
 
+    bool legal_traj = true;
+    if (!skip_trajectory_validation_){
+      legal_traj = collision_planner_.checkTrajectory(test_vel.linear.x, test_vel.linear.y, test_vel.angular.z, true);
+    }
     double scaling_factor = 1.0;
     double ds = scaling_factor / samples_;
 
