@@ -305,7 +305,10 @@ namespace pose_follower {
     {
       res.linear.x = 0;
       res.linear.y = 0;
-      if (fabs(res.angular.z) < min_in_place_vel_th_) res.angular.z = min_in_place_vel_th_ * sign(res.angular.z);
+      if (fabs(res.angular.z) < min_in_place_vel_th_)
+        res.angular.z = min_in_place_vel_th_ * sign(res.angular.z);
+      if (fabs(res.angular.z) > max_vel_th_)
+        res.angular.z = max_vel_th_ * sign(res.angular.z);
       return res;
     }
 
@@ -339,7 +342,7 @@ namespace pose_follower {
       res.linear.y = 0.0;
     }
 
-    ROS_DEBUG("Angular command %f", res.angular.z);
+    ROS_DEBUG("limitTwist Pre: (%f, %f)   Post: (%f, %f)", twist.linear.x, twist.angular.z, res.linear.x, res.angular.z);
     return res;
   }
 
