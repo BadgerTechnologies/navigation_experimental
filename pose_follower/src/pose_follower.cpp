@@ -215,6 +215,20 @@ namespace pose_follower {
       }
     }
 
+    // When plan has several steps at exactly the same position
+    // (i.e. a rotation in place), skip the current waypoint to the final
+    // such step, which allows for much smoother rotational motion.
+    if (global_plan_.size() > 2){
+      while((current_waypoint_ < global_plan_.size() - 2)
+            && (global_plan_[current_waypoint_].pose.position.x
+                == global_plan_[current_waypoint_+1].pose.position.x)
+            && (global_plan_[current_waypoint_].pose.position.y
+                == global_plan_[current_waypoint_+1].pose.position.y))
+      {
+        current_waypoint_++;
+      }
+    }
+
     //if we're not in the goal position, we need to update time
     if(!in_goal_position)
       goal_reached_time_ = ros::Time::now();
