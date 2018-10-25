@@ -197,6 +197,8 @@ namespace pose_follower {
       ROS_ERROR("Not legal (%.2f, %.2f, %.2f)", limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z);
       geometry_msgs::Twist empty_twist;
       cmd_vel = empty_twist;
+      // Tickle the timestamp so we don't erroneously report goal reached
+      goal_reached_time_ = ros::Time::now();
       return false;
     }
 
